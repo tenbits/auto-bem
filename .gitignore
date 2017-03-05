@@ -1,0 +1,6 @@
+*.komodoproject
+.reference
+/.idea
+/.local
+npm-debug.log
+node_modules

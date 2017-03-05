@@ -1,0 +1,9 @@
+before_script:
+  - npm run build
+
+script:
+  - "npm test"
+
+language: node_js
+node_js:
+  - "6.10.0"

@@ -1,0 +1,204 @@
+UTest({
+	$config: {
+		breakOnError: true
+	},
+	'should parse single selector rule' () {
+		var x = AutoBem.Selector.parse('section.foo:after');
+		has_(x, {
+			rules: [ 
+				{ str: 'section', type: AutoBem.Selector.Type.TAG },
+				{ str: '.foo', type: AutoBem.Selector.Type.CLASS },
+				{ str: ':after', type: AutoBem.Selector.Type.PSEUDO }
+			],
+			nestCount: 0
+		});
+	},
+	'should parse pseudos': {
+		'should parse webkit things' () {
+			var x = AutoBem.Selector.parse('input[type="number"]::-webkit-inner-spin-button');
+			has_(x, {
+				rules: [ 
+					{ str: 'input', type: AutoBem.Selector.Type.TAG },
+					{ str: '[type="number"]', type: AutoBem.Selector.Type.ATTR },
+					{ str: '::-webkit-inner-spin-button', type: AutoBem.Selector.Type.PSEUDO }
+				],
+				nestCount: 0
+			});	
+		},
+		'should parse nth child' () {
+			var x = AutoBem.Selector.parse('div:nth-child(2n+1)');
+			has_(x, {
+				rules: [ 
+					{ str: 'div', type: AutoBem.Selector.Type.TAG },
+					{ str: ':nth-child(2n+1)', type: AutoBem.Selector.Type.PSEUDO }
+				],
+				nestCount: 0
+			});	
+		},
+	},
+	'should parse nested selectors': {
+		'decendant selectors' () {
+			var x = AutoBem.Selector.parse('section 	  .foo:after');
+			has_(x, {
+				rules: [ 
+					{ str: 'section', type: AutoBem.Selector.Type.TAG }
+				],
+				nextOperator: ' ',
+				nestCount: 1,
+				child: {
+					rules: [ 
+						{ str: '.foo', type: AutoBem.Selector.Type.CLASS },
+						{ str: ':after', type: AutoBem.Selector.Type.PSEUDO }
+					],
+					nestCount: 0	
+				}
+			});
+		},
+		'child combinator selectors' () {
+			var x = AutoBem.Selector.parse('.bar:empty:active>a[href*=foo]   >i[disabled].active:focus');
+			has_(x, {
+				rules: [ 
+					{ str: '.bar', type: AutoBem.Selector.Type.CLASS },
+					{ str: ':empty', type: AutoBem.Selector.Type.PSEUDO },
+					{ str: ':active', type: AutoBem.Selector.Type.PSEUDO }
+				],
+				nextOperator: '>',
+				nestCount: 2
+			});
+			
+			x = x.child;
+			has_(x, {
+				rules: [ 
+					{ str: 'a', type: AutoBem.Selector.Type.TAG },
+					{ str: '[href*=foo]', type: AutoBem.Selector.Type.ATTR }
+				],
+				nestCount: 1,
+				nextOperator: '>'
+			});
+
+			x = x.child;
+			has_(x, {
+				rules: [ 
+					{ str: 'i', type: AutoBem.Selector.Type.TAG },
+					{ str: '[disabled]', type: AutoBem.Selector.Type.ATTR },
+					{ str: '.active', type: AutoBem.Selector.Type.CLASS },
+					{ str: ':focus', type: AutoBem.Selector.Type.PSEUDO }
+				],
+				nestCount: 0
+			});
+		},
+		'adjacent sibling combinator' () {
+			var x = AutoBem.Selector.parse('p + p');
+			has_(x, {
+				rules: [ 
+					{ str: 'p', type: AutoBem.Selector.Type.TAG }
+				],
+				nestCount: 1,
+				nextOperator: '+'
+			});
+
+			x = x.child;
+			has_(x, {
+				rules: [ 
+					{ str: 'p', type: AutoBem.Selector.Type.TAG }
+				],
+				nestCount: 0
+			});
+		},
+		'general sibling combinator' () {
+			var x = AutoBem.Selector.parse('.active~.visible');
+			has_(x, {
+				rules: [ 
+					{ str: '.active', type: AutoBem.Selector.Type.CLASS }
+				],
+				nestCount: 1,
+				nextOperator: '~'
+			});
+
+			x = x.child;
+			has_(x, {
+				rules: [ 
+					{ str: '.visible', type: AutoBem.Selector.Type.CLASS }
+				],
+				nestCount: 0
+			});
+		},
+		'super-descendant combinator' () {
+			var x = AutoBem.Selector.parse(':host(.active)>>>a');
+			has_(x, {
+				rules: [
+					{ str: '.active', type: AutoBem.Selector.Type.CLASS }					
+				],
+				isHost: true,
+				nestCount: 1,
+				nextOperator: '>>>'
+			});
+			x = x.child;
+			has_(x, {
+				rules: [ 
+					{ str: 'a', type: AutoBem.Selector.Type.TAG }
+				],
+				nestCount: 0
+			});
+		}
+	},
+	'should parse the host': {
+		'just self' () {
+			var x = AutoBem.Selector.parse(':host');
+			has_(x, {
+				nestCount: 0,
+				isHost: true
+			});					
+			eq_(x.rules.length, 0);
+		},
+		'with selectors' () {
+			var x = AutoBem.Selector.parse(':host(.active:hover)');
+			has_(x, {
+				rules: [ 
+					{ str: '.active', type: AutoBem.Selector.Type.CLASS },
+					{ str: ':hover', type: AutoBem.Selector.Type.PSEUDO }
+				],
+				nestCount: 0,
+				isHost: true
+			});		
+		},
+		'with selector and child' () {
+			var x = AutoBem.Selector.parse(':host(.active)>a');
+			has_(x, {
+				rules: [ 
+					{ str: '.active', type: AutoBem.Selector.Type.CLASS }
+				],
+				nestCount: 1,
+				isHost: true
+			});	
+
+			x = x.child;
+			has_(x, {
+				rules: [ 
+					{ str: 'a', type: AutoBem.Selector.Type.TAG }
+				],
+				nestCount: 0,
+				isHost: false
+			});
+		}
+	},
+	'should parse and serialize back ALL bootstrap selectors' () {
+		var txt = io.File.read('/test/fixtures/bootstrap-selectors.txt');
+
+		txt
+			.split('\n')
+			.map(line => line.trim())
+			.filter(line => line !== '')
+			.forEach(line => {
+				var x =  AutoBem.Selector.parse(line);
+				var str = x.toString();
+				if (str !== line) {
+					logger.log(str.yellow);
+					logger.log(line.green);
+					throw Error(`Not matched`);
+				} 				
+			});
+
+		eq_(1, 1);
+	}
+})

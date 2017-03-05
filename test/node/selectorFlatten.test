@@ -1,0 +1,96 @@
+UTest({
+	$before () {
+		this.$flattenSelector  = function (selector) {
+			var selector = AutoBem.Selector.parse(selector);
+			var matches = [ {selector} ];
+			AutoBem.selectorFlatten(matches);
+			return matches[0];
+		};
+	},
+	'should flatten the host by block type' () {
+		
+		var match = this.$flattenSelector('.foo');
+
+		var sel = match.selector.toString();
+		has_(sel, /\.foo_.{1,3}/);
+
+		var mappings = match.mappings;
+		eq_(mappings.length, 1);
+		eq_(mappings[0].query.toString(), ':host');
+		eq_(match.selector.rules[0].str, mappings[0].klass);
+	
+	},
+	'descendant selector' () {
+		var match = this.$flattenSelector('.foo .container');
+
+		var sel = match.selector.toString();
+		has_(sel, /\.foo_.{1,3}__container/);
+
+		var mappings = match.mappings;
+		eq_(mappings.length, 1);
+		eq_(mappings[0].query.toString(), '.container');
+		eq_(match.selector.rules[0].str, mappings[0].klass);
+	},
+	'3n nesting with child selector' () {
+		var match = this.$flattenSelector('.foo .container > .heading');
+
+		var sel = match.selector.toString();
+		has_(sel, /\.foo_.{1,3}__container__child__heading/);
+
+		var mappings = match.mappings;
+		eq_(mappings.length, 1);
+		var mapper = mappings[0];
+		eq_(mapper.query.toString(), '.container>.heading');
+		eq_(match.selector.rules[0].str, mapper.klass);
+	},
+	'3n nesting inside the modifier' () {
+		var match = this.$flattenSelector('.foo .container.active .heading');
+
+		var sel = match.selector.toString();
+		has_(sel, /\.foo_.{1,3}__container\.active \.foo_.{1,3}__container__heading/);
+
+		var mappings = match.mappings;
+		eq_(mappings.length, 2);
+		var mapper = mappings[0];
+		eq_(mapper.query.toString(), '.container');
+
+		var mapper = mappings[1];
+		eq_(mapper.query.toString(), '.container .heading');
+	},
+	'2n nesting inside pseudo' () {
+		var match = this.$flattenSelector('.foo:hover .heading');
+
+		var sel = match.selector.toString();
+		has_(sel, /\.foo_.{1,3}:hover \.foo_.{1,3}__heading/);
+
+		var mappings = match.mappings;
+		eq_(mappings.length, 2);
+		
+		var mapper = mappings[0];					
+		eq_(mapper.query.toString(), '.heading');
+
+		var mapper = mappings[1];
+		eq_(mapper.query.toString(), ':host');
+	},
+	'many' () {
+		var css = `
+			.foo { color: red }
+			.foo.active { width: 100 }
+			.foo .container {}
+			.foo header {}
+			.foo header > h1 {}
+			.foo.active header > h1 {}
+		`;
+		var matches = AutoBem.selectorMatches(css);
+		AutoBem.selectorFlatten(matches);
+
+		eq_(matches.length, 6);
+
+		has_(matches[0].selector.toString(), /^\.foo_.{1,3}$/);
+		has_(matches[1].selector.toString(), /^\.foo_.{1,3}\.active$/);
+		has_(matches[2].selector.toString(), /^\.foo_.{1,3}__container$/);
+		has_(matches[3].selector.toString(), /^\.foo_.{1,3}__tag_header$/);
+		has_(matches[4].selector.toString(), /^\.foo_.{1,3}__tag_header__child__tag_h1$/);
+		has_(matches[5].selector.toString(), /^\.foo_.{1,3}\.active \.foo_.{1,3}__tag_header__child__tag_h1$/);
+	}
+})

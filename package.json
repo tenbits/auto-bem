@@ -1,0 +1,26 @@
+{
+    "name": "bemCss",
+    "description": "Transforms selectors in html and the css to be unique",
+    "version": "0.1.8",
+    "author": "Alexander Kit <alex.kit@atmajs.com>",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/tenbits/bemCss.git"
+    },
+    "bugs": {
+        "url": "https://github.com/tenbits/bemCss/issues"
+    },
+    "licenses": [
+        "MIT"
+    ],
+    "main": "lib/bemCss.js",
+    "devDependencies": {
+        "atma": ">0.9.26"
+    },
+    "scripts": {
+        "test": "atma test",
+        "build": "atma",
+        "release": "atma release"
+    },
+    "keywords": []    
+}

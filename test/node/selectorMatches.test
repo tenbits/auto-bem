@@ -1,0 +1,120 @@
+UTest({
+	'simple' () {
+		var css = `
+			/* lorem ipsum */
+
+			html, body {
+				color: red
+			}
+			.wrapper{
+				width: 100							
+			}
+			#i32 a[href=*bob] {
+
+			}
+		`;
+		var matches = AutoBem.selectorMatches(css);
+		eq_(matches.length, 4);
+
+		var arr = matches.map(x => x.str);
+		deepEq_(arr, ['html', 'body', '.wrapper', '#i32 a[href=*bob]']);
+
+		has_(matches[0].selector, {
+			rules: [ {str: 'html', type: AutoBem.Selector.Type.TAG} ],
+			nestCount: 0
+		});
+		has_(matches[1].selector, {
+			rules: [ {str: 'body', type: AutoBem.Selector.Type.TAG} ],
+			nestCount: 0
+		});
+		has_(matches[2].selector, {
+			rules: [ {str: '.wrapper', type: AutoBem.Selector.Type.CLASS} ],
+			nestCount: 0
+		});
+		has_(matches[3].selector, {
+			rules: [ {str: '#i32', type: AutoBem.Selector.Type.ID} ],
+			nextOperator: ' ',
+			nestCount: 1,
+			child: {
+				rules: [
+					{str: 'a', type: AutoBem.Selector.Type.TAG},
+					{str: '[href=*bob]', type: AutoBem.Selector.Type.ATTR},
+				],
+				nestCount: 0
+			}
+		});
+	},
+	'should match multiple selectors' () {
+		var css = `
+			/*!
+			 * Bootstrap v3.3.7 (http://getbootstrap.com)
+			 * Copyright 2011-2016 Twitter, Inc.
+			 * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+			 */
+			/*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
+			html {
+			  font-family: sans-serif;
+			  -webkit-text-size-adjust: 100%;
+			      -ms-text-size-adjust: 100%;
+			}
+			body {
+			  margin: 0;
+			}
+			article,
+			aside,
+			details,
+			figcaption,
+			figure,
+			footer,
+			header,
+			hgroup,
+			main,
+			menu,
+			nav,
+			/** foo */
+			section,
+			summary {
+			  display: block;
+			}
+			audio,
+			canvas,
+			progress,
+			video {
+			  display: inline-block;
+			  vertical-align: baseline;
+			}
+			audio:not([controls]) {
+			  display: none;
+			  height: 0;
+			}
+			[hidden],
+			template {
+			  display: none;
+			}
+			a {
+			  background-color: transparent;
+			}
+			a:active,
+			a:hover {
+			  outline: 0;
+			}
+		`;
+		var matches = AutoBem.selectorMatches(css);
+		eq_(matches.length, 25);
+		eq_(matches[matches.length - 2].selector.toString(), 'a:active');
+
+	},
+	'should match ALL bootstrap selectors' () {
+		var allSelectors = io.File.read('/test/fixtures/bootstrap-selectors.txt'),
+			allCss = io.File.read('/test/fixtures/bootstrap.css');
+
+		var arr = allSelectors.split('\n');
+		var matches = AutoBem.selectorMatches(allCss);
+		eq_(arr.length, matches.length);
+
+		var str = matches.map(x => x.selector.toString()).join('\n');
+		eq_(allSelectors, str);
+		
+		//test io.File.write('/test/fixtures/bootstrap-selectors-out.txt', out);
+	}
+})
