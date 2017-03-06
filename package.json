@@ -25,5 +25,6 @@
   "keywords": [],
   "dependencies": {
     "maskjs": ">=0.61.5"
-  }
+  },
+  "tonicExampleFilename": "examples/simple.js"
 }
