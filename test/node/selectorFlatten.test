@@ -92,5 +92,8 @@ UTest({
 		has_(matches[3].selector.toString(), /^\.foo_.{1,3}__tag_header$/);
 		has_(matches[4].selector.toString(), /^\.foo_.{1,3}__tag_header__child__tag_h1$/);
 		has_(matches[5].selector.toString(), /^\.foo_.{1,3}\.active \.foo_.{1,3}__tag_header__child__tag_h1$/);
+
+		eq_(matches[5].mappings[0].query.toString(), 'header>h1');
+		eq_(matches[5].mappings[1].query.toString(), ':host');
 	}
 })

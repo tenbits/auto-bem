@@ -1,15 +1,18 @@
-var transform_mask;
+var rewriteMask;
 (function(){
 
-	var jmask = mask.jmask;
-
-	transform_mask = function (template, cssMatches) {
+	rewriteMask = function (template, cssMatches) {
 		var mappings = getMappings(cssMatches),
 			imax = mappings.length,
 			root = null;
 
 		return mask_TreeWalker.walk(template, function (node) {
-			if (root == null) root = node;
+			if (node.type === mask.Dom.TEXTNODE) {
+				return;
+			}
+			if (root == null) {
+				root = node;
+			}
 
 			var i = -1;
 			while(++i < imax) if (isMatch(root, node, mappings[i].query.last)) {

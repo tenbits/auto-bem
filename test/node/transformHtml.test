@@ -1,0 +1,33 @@
+UTest({
+	'should transform css and mask' () {
+		var css = `
+			.foo { color: red }
+			.foo .item { background: green;}
+		`;
+		var html = `			
+			<div class='foo'> 
+				<ul>
+					<li class='item'>Hello</li>
+				</ul>				
+			</div>
+		`;
+
+	
+		var [template, style] = AutoBem.transform(html, css, { 
+			scopeId: 'MyID',
+			templateType: 'html' 
+		});
+
+		
+		has_(template, 'MyID foo');
+		has_(template, 'MyID__item item');
+
+
+		has_(style, '.MyID {');
+		hasNot_(style, '.foo {');
+
+		has_(style, '.MyID__item');
+		hasNot_(style, '.item');
+		
+	}
+})

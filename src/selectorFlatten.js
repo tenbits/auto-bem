@@ -18,7 +18,7 @@
 			block = getBlockFromFilename(opts) || getBlockAny(matches);
 			flatten = flattenHost;
 		}
-		var identity = block + '_' + genSalt(),
+		var identity = getBlockIdentity(block, opts),
 			imax = matches.length,
 			i = -1;
 		while(++i < imax){
@@ -26,6 +26,15 @@
 		}
 	};
 
+	function getBlockIdentity (block, opts) {
+		if (opts && opts.scopeId) {
+			return '.' + opts.scopeId;
+		}
+		if (opts && opts.useSalt === false) {
+			return block;
+		}
+		return block + '_' + genSalt();
+	}
 
 	function getBlockByDescendant (matches) {
 		var selector = matches[0].selector;

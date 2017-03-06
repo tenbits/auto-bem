@@ -6,7 +6,8 @@ var autoBem_Selector,
 	autoBem_selectorFlatten,
 	autoBem_transform;
 
-(function () {
+(function (mask) {
+	
 	// import parse_helpers
 
 	// import Selector
@@ -14,4 +15,4 @@ var autoBem_Selector,
 	// import selectorMatches
 	// import selectorFlatten
 	// import transform
-}());
+}(typeof Mask !== 'undefined' ? Mask : mask));

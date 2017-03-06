@@ -113,8 +113,16 @@ UTest({
 		eq_(arr.length, matches.length);
 
 		var str = matches.map(x => x.selector.toString()).join('\n');
-		eq_(allSelectors, str);
 		
-		//test io.File.write('/test/fixtures/bootstrap-selectors-out.txt', out);
+		// Normalize the EOL/LF
+		allSelectors = allSelectors.replace(/[\n\r]*/g, '\n');
+		str = str.replace(/[\n\r]*/g, '\n');
+
+		if (allSelectors !== str) {
+			// The content is to huge for the diff compare, 
+			// just write the content to file, to analyze later
+			io.File.write('/test/fixtures/bootstrap-selectors-out.txt', str);	
+			throw new Error('Output not matched');
+		}			
 	}
 })

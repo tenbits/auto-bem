@@ -1,6 +1,7 @@
 module.exports = {
 	env: [
-		'/lib/autoBem.js::AutoBem'
+		'/node_modules/maskjs/lib/mask.node.js::mask',
+		'/lib/autoBem.js::AutoBem',
 	],
 	tests: 'test/**.test'
 };
