@@ -13,7 +13,7 @@ UTest({
 		`;
 
 	
-		var [template, style] = AutoBem.transform(html, css, { 
+		var { template, css: style } = AutoBem.transform(html, css, { 
 			scopeId: 'MyID',
 			templateType: 'html' 
 		});

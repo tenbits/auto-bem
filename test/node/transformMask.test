@@ -10,7 +10,7 @@ UTest({
 			}
 		`;
 
-		var [template, style] = AutoBem.transform(mask, css, { 
+		var { template, css: style } = AutoBem.transform(mask, css, { 
 			scopeId: 'MyID',
 			templateType: 'mask' 
 		});

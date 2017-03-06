@@ -1,19 +1,19 @@
 {
-  "name": "bemCss",
-  "description": "Transforms selectors in html and the css to be unique",
+  "name": "auto-bem",
+  "description": "Transforms selectors in html and css to be unique",
   "version": "0.1.8",
   "author": "Alexander Kit <alex.kit@atmajs.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tenbits/bemCss.git"
+    "url": "https://github.com/tenbits/autoBem.git"
   },
   "bugs": {
-    "url": "https://github.com/tenbits/bemCss/issues"
+    "url": "https://github.com/tenbits/autoBem/issues"
   },
   "licenses": [
     "MIT"
   ],
-  "main": "lib/bemCss.js",
+  "main": "lib/autoBem.js",
   "devDependencies": {
     "atma": ">0.9.26"
   },
