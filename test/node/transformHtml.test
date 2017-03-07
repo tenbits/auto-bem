@@ -1,9 +1,14 @@
 UTest({
-	'should transform css and mask' () {
+	'should transform css and html using block-css' () {
 		var css = `
 			.foo { color: red }
 			.foo .item { background: green;}
 		`;
+		var awaitCss = `
+			.MyID { color: red }
+			.MyID__item { background: green;}
+		`;
+		
 		var html = `			
 			<div class='foo'> 
 				<ul>
@@ -11,23 +16,55 @@ UTest({
 				</ul>				
 			</div>
 		`;
-
+		var awaitHtml = `			
+			<div class='MyID foo'> 
+				<ul>
+					<li class='MyID__item item'>Hello</li>
+				</ul>				
+			</div>
+		`;
+		
 	
-		var { template, css: style } = AutoBem.transform(html, css, { 
-			scopeId: 'MyID',
-			templateType: 'html' 
+		var { template, css } = AutoBem.transform(html, css, { 
+			scopeId: 'MyID'
 		});
 
+		eq_(template, awaitHtml);
+		eq_(css, awaitCss);
+	},
+	'should transform css and html using host-css' () {
+		var css = `
+			:host { color: red }
+			:host(.active) { color: green }
+
+			.item { background: red }
+			:host(.active) .item { background: green;}
+		`;
+		var awaitCss = `
+			.MyID { color: red }
+			.MyID.active { color: green }
+
+			.MyID__item { background: red }
+			.MyID.active .MyID__item { background: green;}
+		`;
 		
-		has_(template, 'MyID foo');
-		has_(template, 'MyID__item item');
-
-
-		has_(style, '.MyID {');
-		hasNot_(style, '.foo {');
-
-		has_(style, '.MyID__item');
-		hasNot_(style, '.item');
+		var html = `			
+			<div> 
+				<span class='item'>Hello</span>
+			</div>
+		`;
+		var awaitHtml = `			
+			<div class='MyID'> 
+				<span class='MyID__item item'>Hello</span>
+			</div>
+		`;
 		
+	
+		var { template, css } = AutoBem.transform(html, css, { 
+			scopeId: 'MyID'
+		});
+
+		eq_(template, awaitHtml);
+		eq_(css, awaitCss);
 	}
 })

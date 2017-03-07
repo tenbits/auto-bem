@@ -20,11 +20,14 @@ Creates Scoped CSS by replacing the selectors in CSS with unique names, and addi
 - `1` [Understand the idea](#1-understand-the-idea)
     - `1.1` [Block and Element](#11-block-and-element)
     - `1.2` [Modifiers](#12-modifiers)
+    - `1.3` [Host](#13-host)
 - `2` [API](#2-api)
     - `2.1` [Require](#21-require)
     - `2.2` [Transform](#22-transform)
         - `2.2.1` [Options](#221-options)
         - `2.2.2` [Result](#222-result)
+
+- `3` [Tests](#3-tests)
 
     
 # `1` Understand the idea
@@ -52,7 +55,7 @@ The example above is not about how you should write your CSS, it only shows the 
 ```html
 <div class='foo_SALT foo'>
     <header>
-        <span class='foo_SALT__tag_header__child__title'></span>
+        <span class='foo_SALT__tag_header__child__title title'></span>
     </header>
     <ul class='foo_SALT__tag_ul'>
         <li class='foo_SALT__item item'></li>
@@ -101,6 +104,44 @@ Outputs:
 .foo_SALT.is-selected .foo_SALT__title { /*...*/ }
 ```
 
+
+### `1.3` Host
+
+```html
+<div>
+    <header><span class='title'></span></header>
+    <ul>
+        <li class='item'></li>
+    </ul>
+</div>
+```
+```css
+:host {}
+header > .title {}
+ul {}
+.item {}
+```
+
+The output of the transformion with the defined filename, e.g. `/some/path/to/MyComponent.html`
+
+```html
+<div class="MyComponent_SALT">
+    <header>
+        <span class='MyComponent_SALT__tag_header__child__title title'></span>
+    </header>
+    <ul class='MyComponent_SALT__tag_ul'>
+        <li class='MyComponent_SALT__item item'></li>
+    </ul>
+</div>
+```
+```css
+.MyComponent_SALT {}
+.MyComponent_SALT__tag_header__child__title {}
+.MyComponent_SALT__tag_ul {}
+.MyComponent_SALT__item  {}
+```
+
+
 ---
 
 
@@ -120,9 +161,11 @@ var autoBem = require('autoBem');
 
 | Key | Type | Default | Description|
 |-----|------|---------|:-----------|
-| `scopeId` | `string` | `null` | Define your own block name |
+| `scopeId` | `string` | `null` | Define your own block name. Per default we try to find the id by block name or the filename |
+|`scopeType`| `string` | `'block' | 'host'` | Per default we try to find out, if your css describes a block or host styles. | 
 | `useSalt` | `boolean`| `true` | Add a unique salt, when generating the block name, to ensure the block name is absolutely unique |
 | `templateType` | `string` | `html` | For now, we support `html` and `mask` syntax |
+| `filename` | `string` | `null` | Path to the template. Primary, will be used to get the BlockName by FileName for the `:host` styles, otherwise only SALT will be generated|
 
 ### `2.2.2` Result
 
@@ -134,6 +177,11 @@ Returns transformed template and styles.
     css: string
 }
 ```
+
+
+# `3` Tests
+
+See the [tests](test/node/transformHtml.test) for more examples.
 
 
 ---
