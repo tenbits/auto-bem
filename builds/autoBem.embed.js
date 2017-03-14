@@ -4,7 +4,8 @@
 var autoBem_Selector,
 	autoBem_selectorMatches,
 	autoBem_selectorFlatten,
-	autoBem_transform;
+	autoBem_transform,
+	autoBem_BemCss;
 
 (function (mask) {
 	
@@ -15,4 +16,5 @@ var autoBem_Selector,
 	// import selectorMatches
 	// import selectorFlatten
 	// import transform
+	// import BemCss
 }(typeof Mask !== 'undefined' ? Mask : mask));

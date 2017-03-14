@@ -1,0 +1,39 @@
+UTest({
+	$config: {
+		breakOnError: true
+	},
+	'should parse single selector rule' () {
+		var css = `
+			.foo { color: red }
+			.foo .item { background: green;}
+		`;
+		var awaitCss = `
+			.MyID { color: red }
+			.MyID__item { background: green;}
+		`;
+		var mask = `
+			.foo {
+				ul > li.item > 'Hello'
+			}
+		`;
+		var awaitMask = `
+.MyID.foo >
+    ul >
+        li.MyID__item.item >
+            'Hello'
+`.trim();
+		
+
+		var bemCss = new AutoBem.BemCss(css, {
+			scopeId: 'MyID'
+		});
+		eq_(bemCss.style, awaitCss);
+
+		var template = bemCss.transformTemplate(mask, {
+			templateType: 'mask'
+		});
+
+		
+		eq_(template, awaitMask);		
+	}
+});

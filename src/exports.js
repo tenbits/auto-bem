@@ -3,4 +3,5 @@ exports[property] = {
 	selectorMatches: autoBem_selectorMatches,
 	selectorFlatten: autoBem_selectorFlatten,
 	transform: autoBem_transform,
+	BemCss: autoBem_BemCss
 };
