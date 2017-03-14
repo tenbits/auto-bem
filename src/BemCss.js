@@ -10,6 +10,9 @@ var BemCss;
 		transformTemplate: function (template, options) {
 			return transform_template(template, this.matches, options);
 		},
+		transformAst: function (ast) {
+			transform_ast(ast, this.matches);
+		},
 		getStyle: function () {
 			return this.style;
 		}

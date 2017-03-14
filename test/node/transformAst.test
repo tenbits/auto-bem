@@ -1,0 +1,33 @@
+UTest({
+	'should transform css and mask partial ast' () {
+		var css = `
+			.foo { color: red }
+			.foo .item { background: green;}
+		`;
+		var template = `
+			section > .foo {
+				ul > li.item > 'Hello'
+			}
+		`;
+
+		var bemCss = new AutoBem.BemCss(css, {
+			scopeId: 'MyID'
+		});
+
+		var ast = mask.parse(template);
+		var node = mask.j(ast).find('.foo').get(0);
+		bemCss.transformAst(node);
+
+		
+		var result = mask.stringify(ast, 4);
+		var awaitTemplate = `
+section >
+    .MyID.foo >
+        ul >
+            li.MyID__item.item >
+                'Hello'
+`.trim();
+
+		eq_(result, awaitTemplate);
+	}
+})

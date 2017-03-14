@@ -1,4 +1,5 @@
-var transform_template,
+var transform_ast,
+	transform_template,
 	transform_style;
 
 (function () {
@@ -18,7 +19,9 @@ var transform_template,
 		ast = rewriteMask(ast, matches);
 		return mask.stringify(ast, { minify: minify });
 	};
-
+	transform_ast = function (ast, matches) {
+		rewriteMask(ast, matches);
+	};
 	transform_style = function (style, matches, options) {
 		return rewriteCss(style, matches);
 	};
