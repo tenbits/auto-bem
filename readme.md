@@ -1,5 +1,3 @@
-**_work in progress_**
-
 Auto BEM for Components
 ----
 
@@ -7,7 +5,7 @@ Auto BEM for Components
 
 ## HTML and CSS Transformer API
 
-Creates Scoped CSS by replacing the selectors in CSS with unique names, and adding those names to the matched elements in HTML
+Creates Scoped CSS by **replacing** selectors (_block_ and _elements_) in CSS with unique names, and **adding** those names to the matched elements in HTML
 
 > :rocket: This module gives you only the functions. You may want to integrate them into your favorite Build-Tool.
 
@@ -26,6 +24,7 @@ Creates Scoped CSS by replacing the selectors in CSS with unique names, and addi
     - `2.2` [Transform](#22-transform)
         - `2.2.1` [Options](#221-options)
         - `2.2.2` [Result](#222-result)
+    - `2.3` [Two-Step Transform](#23-two-step-transform)
 
 - `3` [Tests](#3-tests)
 
@@ -154,6 +153,8 @@ var autoBem = require('autoBem');
 
 ### `2.2` Transform
 
+Transform both, CSS and the template, at once.
+
 `.transform(template: string, css: string, options: Options): Result`
 
 ### `2.2.1` Options
@@ -176,6 +177,39 @@ Returns transformed template and styles.
     template: string,
     css: string
 }
+```
+
+### `2.3` Two-Step Transform
+
+Sometimes you may want to apply one stylesheet to different templates. There for create the `BemCss` instance of the stylesheet and apply it to different templates.
+
+```js
+class BemCss {
+    constructor (cssText: string, options?: StyleOptions),
+    /* Transformed css */
+    getStyle (),
+    /* transform template */
+    transformTemplate (template: string, options?: TemplateOptions)
+}
+
+StyleOptions = {
+    scopeId?,
+    scopeType?,
+    useSalt?,
+    filename?
+};
+TemplateOptions = {
+    templateType?
+};
+```
+
+```js
+let bemCss = new AutoBem.BemCss(myCssText, StyleOptions)
+
+let cssText  = bemCss.getStyle();
+let tmplText = bemCss.transformTemplate(template, TemplateOptions)
+
+console.log(cssText, tmplText);
 ```
 
 
