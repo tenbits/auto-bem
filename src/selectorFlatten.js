@@ -27,13 +27,21 @@
 	};
 
 	function getBlockIdentity (block, opts) {
-		if (opts && opts.scopeId) {
+		if (opts == null) {
+			return block + '_' + genSalt();
+		}
+
+		if (opts.scopeId) {
 			return '.' + opts.scopeId;
 		}
-		if (opts && opts.useSalt === false) {
+		if (opts.useSalt === false || opts.salt === '') {
 			return block;
 		}
-		return block + '_' + genSalt();
+		var salt = opts.salt || genSalt();
+		if (salt !== opts.salt) {
+			opts.salt = salt;
+		}
+		return block + '_' + salt;
 	}
 
 	function getBlockByDescendant (matches) {

@@ -161,7 +161,7 @@ var Selector;
 			}
 		}
 		return top;
-	};
+	}
 
 	function fromArray (arr) {
 		var first = arr[0];

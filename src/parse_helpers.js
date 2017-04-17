@@ -8,7 +8,8 @@ var is_whitespace,
 	is_commentEnd,
 	is_selectorEnd,
 	parser_goTo,
-	parser_goToGroupEnd;
+	parser_goToGroupEnd,
+	parser_goToQuoteEnd;
 
 (function(){
 	parser_goTo = function (isEnd, str, i_, imax) {

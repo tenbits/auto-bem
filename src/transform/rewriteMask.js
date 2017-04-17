@@ -53,7 +53,7 @@ var rewriteMask;
 		var parent = node.parent,
 			selector = selectorLast.parent;
 
-		for (;selector != null && parent != null && parent != root.parent; 
+		for (;selector != null && parent != null && parent !== root.parent; 
 				selector = selector.parent, 
 				parent = parent.parent
 			) {
@@ -103,15 +103,13 @@ var rewriteMask;
 			return node.tagName === rule.str;
 		}
 		throw new Error('Unsupported element`s css rule ' + rule.str);
-	};
+	}
 	function hasClass(node, klass) {
 		var current = node.attr && node.attr.class;
 		if (current == null) return false;
 		return hasClassStrict(current, klass);
-	};
+	}
 	function hasClassStrict(a, b) {
 		return (' ' + a + ' ').indexOf(' ' + b + ' ') > -1;
 	}
-
-	
 }());
