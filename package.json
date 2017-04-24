@@ -1,7 +1,7 @@
 {
   "name": "auto-bem",
   "description": "Transforms selectors in html and css to be unique",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "author": "Alexander Kit <alex.kit@atmajs.com>",
   "repository": {
     "type": "git",

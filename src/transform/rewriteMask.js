@@ -99,7 +99,7 @@ var rewriteMask;
 		if (rule.type === Selector.Type.CLASS) {
 			return hasClass(node, rule.str.substring(1));
 		}
-		if (rule.type === Selector.Type.CLASS) {
+		if (rule.type === Selector.Type.TAG) {
 			return node.tagName === rule.str;
 		}
 		throw new Error('Unsupported element`s css rule ' + rule.str);

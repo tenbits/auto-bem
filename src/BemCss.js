@@ -8,8 +8,9 @@ var BemCss;
 		this.style = transform_style(style, this.matches, this.options);
 	};
 	BemCss.prototype = {
-		transformTemplate: function (template) {
-			return transform_template(template, this.matches, this.options);
+		transformTemplate: function (template, options) {
+			var opts = mask.obj.extend(options, this.options);
+			return transform_template(template, this.matches, opts);
 		},
 		transformAst: function (ast) {
 			transform_ast(ast, this.matches);
