@@ -2,6 +2,7 @@ Auto BEM for Components
 ----
 
 [![Build Status](https://travis-ci.org/tenbits/autoBem.png?branch=master)](https://travis-ci.org/tenbits/autoBem)
+[![NPM version](https://badge.fury.io/js/auto-bem.svg)](http://badge.fury.io/js/auto-bem)
 
 ## HTML and CSS Transformer API
 
@@ -148,7 +149,7 @@ The output of the transformion with the defined filename, e.g. `/some/path/to/My
 
 ### `2.1` Require
 ```js
-var autoBem = require('autoBem');
+var autoBem = require('auto-bem');
 ```
 
 ### `2.2` Transform
