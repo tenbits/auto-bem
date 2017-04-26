@@ -45,7 +45,7 @@ var rewriteMask;
 		node.attr.class = name + ' ' + current;
 	}
 
-	function isMatch(root, node, selectorLast) {
+	function isMatch(root, node, selectorLast) {		
 		if (isMatchSingle(root, node, selectorLast) === false) {
 			return false;
 		}
@@ -53,12 +53,10 @@ var rewriteMask;
 		var parent = node.parent,
 			selector = selectorLast.parent;
 
-		for (;selector != null && parent != null && parent !== root.parent; 
-				selector = selector.parent, 
-				parent = parent.parent
-			) {
+		for (;selector != null && parent != null && parent !== root.parent; parent = parent.parent) {
 			var match = isMatchSingle(root, parent, selector);
 			if (match) {
+				selector = selector.parent;
 				continue;
 			}
 			if (selector.nextOperator === '>') {
@@ -69,24 +67,20 @@ var rewriteMask;
 			}
 			return false;
 		}
-
 		return selector == null;
 	}
 	function isMatchSingle (root, node, selector) {
 		if (selector.isHost && node !== root) {
 			return false;
 		}		
-		var imax = selector.rules.length,
-			i = -1;
-
+		var imax = selector.rules.length;
 		if (imax === 0) {
 			if (selector.isHost) {
 				return true;
 			}
-
-			console.log(selector);
 			throw new Error('At least one rule should be present');
-		}
+		}		
+		var i = -1;		
 		while (++i < imax) {
 			if (containsRule(node, selector.rules[i]) === false) {
 				return false;

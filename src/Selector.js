@@ -117,7 +117,7 @@ var Selector;
 					i++;
 				}
 				i = parser_goTo(isNot_tokenChar, str, i + 1, imax);
-				if (start === 0 && str.substring(0, i) === ':host') {
+				if (start === 0 && str.substring(0, i) === ':host') {					
 					selector.isHost = true;
 					i = parser_goTo(isNot_whitespace, str, i, imax);					
 					if (str.charCodeAt(i) === 40/*(*/) {

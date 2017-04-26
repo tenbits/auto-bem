@@ -66,5 +66,75 @@ UTest({
 
 		eq_(template, awaitHtml);
 		eq_(css, awaitCss);
+	},
+	'should match descendants of an element' () {
+		var css = `
+			.container ul .item { background: green; }
+		`;
+		var awaitCss = `
+			.MyID__tag_ul__item { background: green; }
+		`;
+		
+		var html = `	
+			<div class='container'>		
+				<div> 
+					<div class='item'>Hello</div>
+				</div>			
+				<ul>
+					<li class='item'>Hello</li>
+				</ul>
+			</div>
+		`;
+		var awaitHtml = `			
+			<div class='container'>		
+				<div> 
+					<div class='item'>Hello</div>
+				</div>			
+				<ul>
+					<li class='MyID__tag_ul__item item'>Hello</li>
+				</ul>
+			</div>
+		`;		
+	
+		var { template, css } = AutoBem.transform(html, css, { 
+			scopeId: 'MyID'
+		});		
+		eq_(template.trim(), awaitHtml.trim());
+		eq_(css.trim(), awaitCss.trim());
+	},
+	'should match children of an element' () {
+		var css = `
+			.container .foo > .item { background: green; }
+		`;
+		var awaitCss = `
+			.MyID__foo__child__item { background: green; }
+		`;
+		
+		var html = `	
+			<div class='container'>		
+				<div class='foo'> 
+					<ul><li class='item'>Hello</li></ul>
+				</div>			
+				<div class='foo'>
+					<div class='item'>Hello</div>
+				</div>
+			</div>
+		`;
+		var awaitHtml = `			
+			<div class='container'>		
+				<div class='foo'> 
+					<ul><li class='item'>Hello</li></ul>
+				</div>			
+				<div class='foo'>
+					<div class='MyID__foo__child__item item'>Hello</div>
+				</div>
+			</div>
+		`;		
+	
+		var { template, css } = AutoBem.transform(html, css, { 
+			scopeId: 'MyID'
+		});		
+		eq_(template.trim(), awaitHtml.trim());
+		eq_(css.trim(), awaitCss.trim());
 	}
 })

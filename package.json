@@ -20,7 +20,8 @@
   "scripts": {
     "test": "atma test",
     "build": "atma",
-    "release": "atma release"
+    "release": "atma release",
+    "watch": "atma run watch"
   },
   "keywords": [],
   "dependencies": {

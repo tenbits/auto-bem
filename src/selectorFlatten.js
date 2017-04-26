@@ -87,7 +87,7 @@
 			var selector = match.selector,
 				rules = selector.rules;
 
-			var arr = selector.toArray();
+			var arr = selector.toArray();			
 			replaceElIdentities(match, identity, scopeType);
 			
 			var lastSel = arr[arr.length - 1];
