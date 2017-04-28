@@ -3,7 +3,9 @@
 	var type_BLOCK = 1,
 		type_HOST = 2;
 
-	autoBem_selectorFlatten = function (matches, opts) {
+	const Selector = require('./Selector');	
+
+	module.exports = function (matches, opts) {
 		if (matches == null || matches.length === 0) {
 			return;
 		}

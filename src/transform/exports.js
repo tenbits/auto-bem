@@ -1,13 +1,12 @@
-var transform_ast,
-	transform_template,
-	transform_style;
+var transformAst,
+	transformTemplate,
+	transformStyle;
 
 (function () {
-	// import ./rewriteCss
-	// import ./rewriteMask
+	const rewriteCss  = require('./rewriteCss');
+	const rewriteMask = require('./rewriteMask');
 
-
-	transform_template = function (template, matches, options) {
+	transformTemplate = function (template, matches, options) {
 		var minify = options && options.minify || false;
 		var parserFn = options && options.templateType === 'mask'
 			? mask.parse
@@ -17,12 +16,31 @@ var transform_ast,
 		var ast = parserFn(template);
 		
 		ast = rewriteMask(ast, matches);
+
+		var unmatchedElements = matches.filter(x => x.found !== true);
+		if (unmatchedElements.length !== 0) {
+			unmatchedElements.forEach(match => {
+				var error = new Error(`"${match.str}" selector was not found`);
+				var reporter = options.reporter;
+				if (reporter == null) {
+					console.error(error.message);
+					return;
+				}
+				reporter(error);
+			})
+		}		
 		return mask.stringify(ast, { minify: minify });
 	};
-	transform_ast = function (ast, matches) {
+	transformAst = function (ast, matches) {
 		rewriteMask(ast, matches);
 	};
-	transform_style = function (style, matches, options) {
+	transformStyle = function (style, matches, options) {
 		return rewriteCss(style, matches);
 	};
 }());
+
+module.exports = {
+	transformAst,
+	transformTemplate,
+	transformStyle
+};

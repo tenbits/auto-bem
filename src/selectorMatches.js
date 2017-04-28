@@ -1,5 +1,8 @@
 (function(){
 
+	const Selector = require('./Selector');
+	const Utils = require('./parse_helpers');
+
 	var state_SELECTOR = 0,
 		state_RULES = 1,
 		state_MEDIA = 2,
@@ -7,7 +10,7 @@
 		state_KEYFRAMES = 11,
 		state_KEYFRAME = 12;
 
-	autoBem_selectorMatches = function (str) {
+	module.exports = function (str) {
 		var matches = [];
 		var state = state_SELECTOR;
 
@@ -17,14 +20,14 @@
 
 		while (++i < imax) {
 			var c = str.charCodeAt(i);
-			if (is_whitespace(c)) {
+			if (Utils.isWhitespace(c)) {
 				continue;
 			}
 			switch (c) {
 				case 47 /*/*/:
 					c = str.charCodeAt(++i);
 					if (c === 42 /***/) {
-						i = parser_goTo(is_commentEnd, str, i, imax);
+						i = Utils.goTo(Utils.isCommentEnd, str, i, imax);
 						i += 2;
 					}
 					continue;
@@ -58,7 +61,7 @@
 					continue;
 				case 64 /*@*/:
 					start = ++i;
-					i = parser_goTo(isNot_tokenChar, str, i, imax);
+					i = Utils.goTo(Utils.isNotTokenChar, str, i, imax);
 					token = str.substring(start, i);
 					if (token === 'media') {
 						state = state_MEDIA;
@@ -74,7 +77,7 @@
 			}
 			if (state === state_SELECTOR) {
 				start = i;
-				i = parser_goTo(is_selectorEnd, str, i, imax);
+				i = Utils.goTo(Utils.isSelectorEnd, str, i, imax);
 				matches.push(new Match(str.substring(start, i), start));
 				i--;
 			}
@@ -86,7 +89,7 @@
 	function Match (selector, i) {
 		this.str = selector.trim();
 		this.i = i;
-		this.selector = autoBem_Selector.parse(this.str);
+		this.selector = Selector.parse(this.str);
 	}
 	
 }());

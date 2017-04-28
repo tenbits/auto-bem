@@ -1,13 +1,18 @@
-// import transform/
+const {
+	transformStyle,
+	transformTemplate,
+} = require('./transform/exports');
 
-autoBem_transform = function (template, style, options) {
+const selectorMatches = require('./selectorMatches');
+const selectorFlatten = require('./selectorFlatten');
 
-	var matches = autoBem_selectorMatches(style);
-	autoBem_selectorFlatten(matches, options);
+module.exports = function (template, style, options) {
 
+	let matches = selectorMatches(style);
+	selectorFlatten(matches, options);
 
-	var outTemplate = transform_template(template, matches, options);
-	var outStyle = transform_style(style, matches, options);
+	let outTemplate = transformTemplate(template, matches, options);
+	let outStyle = transformStyle(style, matches, options);
 
 	return { template: outTemplate, css: outStyle };
 };

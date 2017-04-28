@@ -20,6 +20,7 @@ Creates Scoped CSS by **replacing** selectors (_block_ and _elements_) in CSS wi
     - `1.1` [Block and Element](#11-block-and-element)
     - `1.2` [Modifiers](#12-modifiers)
     - `1.3` [Host](#13-host)
+    - `1.4` [Pseudo Selectors](#14-pseudo-selectors)
 - `2` [API](#2-api)
     - `2.1` [Require](#21-require)
     - `2.2` [Transform](#22-transform)
@@ -34,6 +35,8 @@ Creates Scoped CSS by **replacing** selectors (_block_ and _elements_) in CSS wi
 
 ### `1.1` Block and Element
 
+> :exclamation: *_One HTML file ond CSS file per Block._*
+
 ```html
 <div class='foo'>
     <header><span class='title'></span></header>
@@ -47,7 +50,7 @@ Creates Scoped CSS by **replacing** selectors (_block_ and _elements_) in CSS wi
 .foo header > .title {}
 .foo ul {}
 .foo .item {}
-/* Raw CSS sample. LESS or SASS would look better */
+/* LESS or SASS would look better */
 ```
 
 The example above is not about how you should write your CSS, it only shows the idea about selector transformations. The output will be:
@@ -69,10 +72,11 @@ The example above is not about how you should write your CSS, it only shows the 
 .foo_SALT__item {}
 ```
 
-> Notice: 
-> - CSS has only the generated class names
-> - The generated classes are inserted into the HTML 
-> - Old CSS classes are preserved in HTML (_in case you want later extend the styles from outside or find them from js._)
+:sweat_drops: Notice: 
+- CSS has only the generated class names
+- The generated classes are inserted into the HTML 
+- Old CSS classes are preserved in HTML (_in case you want later extend the styles from outside or find them from js._)
+- The elements should be present in HTML, otherwise the elements tag can't be found in HTML but it will be renamed in CSS, to ensure no collisions with other blocks/elements are present.
 
 ## `1.2` Modifiers
 
@@ -106,6 +110,11 @@ Outputs:
 
 
 ### `1.3` Host
+
+The are two ways to define the block. 
+
+1. With the root CSS name, like `foo` in the [Block and Element](#11-block-and-element) example (HTML and CSS).
+2. Without the root CSS name, means the selectors are for elements. Then, to target the block, use `:host` css selector.
 
 ```html
 <div>
@@ -141,6 +150,9 @@ The output of the transformion with the defined filename, e.g. `/some/path/to/My
 .MyComponent_SALT__item  {}
 ```
 
+## `1.4` Pseudo Selectors
+
+Pseudo selectors are the same as the modifiers.
 
 ---
 

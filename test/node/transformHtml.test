@@ -136,5 +136,33 @@ UTest({
 		});		
 		eq_(template.trim(), awaitHtml.trim());
 		eq_(css.trim(), awaitCss.trim());
+	},
+	'should not match any element' () {
+		var css = `
+			.myBlock .foo { background: green; }
+		`;
+		var awaitCss = `
+			.MyID__foo { background: green; }
+		`;
+		
+		var html = `	
+			<div class='myBlock'>
+				<div class='baz'></div>
+			</div>
+		`;
+		var awaitHtml = `			
+			<div class='myBlock'>
+				<div class='baz'></div>
+			</div>
+		`;		
+	
+		var reporter = sinon.spy();
+		var { template, css } = AutoBem.transform(html, css, { 
+			scopeId: 'MyID',
+			reporter: reporter
+		});		
+		eq_(template.trim(), awaitHtml.trim());
+		eq_(css.trim(), awaitCss.trim());
+		eq_(reporter.callCount, 1);		
 	}
 })

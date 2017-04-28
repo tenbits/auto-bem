@@ -15,17 +15,78 @@
   ],
   "main": "lib/autoBem.js",
   "devDependencies": {
-    "atma": ">0.9.26"
+    "app-bundler": "0.0.21",
+    "atma": ">0.9.26",
+    "atma-loader-babel": "^1.1.30",
+    "atma-io-middleware-eslint": "latest",
+    "babel-plugin-async-to-promises": "^1.0.5",
+    "babel-preset-es2015": "^6.24.1"
   },
   "scripts": {
     "test": "atma test",
-    "build": "atma",
-    "release": "atma release",
-    "watch": "atma run watch"
+    "build": "app-bundler",
+    "watch": "app-bundler --watch",
+    "release": "atma release"
   },
   "keywords": [],
   "dependencies": {
     "maskjs": ">=0.61.5"
+  },
+  "app-bundler": {
+    "file": "src/exports.js",
+    "outputMain": "lib/auto-bem.js",
+    "package": {
+      "module": "commonjs",
+      "moduleWrapper": "umd",
+      "moduleName": "AutoBemMask",
+      "commonjs": {
+        "output": "simplified"
+      }      
+    },
+    "dynamicDependencies": [
+      "maskjs"
+    ],
+    "middlewares": {
+      "js": [
+        "importer:read",
+        "atma-io-middleware-eslint:read",
+        "atma-loader-babel:read"
+      ]
+    }
+  },
+  "atma": {
+    "plugins": [
+      "atma-loader-babel",
+      "atma-io-middleware-eslint"
+    ],
+    "settings": {
+      "io": {
+        "extensions": {
+          "js": [
+            "atma-io-middleware-eslint:read"
+          ]
+        }
+      },
+      "atma-loader-babel": {
+        "extensions": [
+          "es6",
+          "test"
+        ],
+        "babel": {
+          "presets": [
+            "es2015"
+          ],
+          "plugins": [
+            "async-to-promises"
+          ]
+        }
+      },
+      "atma-io-middleware-eslint": {
+        "parserOptions": {
+          "ecmaVersion": 8
+        }
+      }
+    }
   },
   "tonicExampleFilename": "examples/simple.js"
 }
