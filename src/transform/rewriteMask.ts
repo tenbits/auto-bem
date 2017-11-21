@@ -1,7 +1,7 @@
-const { mask } = require('../globals');
-const Selector = require('../Selector');
+import { mask } from '../globals';
+import { Selector, Type } from '../Selector';
 
-module.exports = function (template, cssMatches) {
+export function rewriteMask (template, cssMatches) {
 	var mappings = getMappings(cssMatches),
 		imax = mappings.length,
 		root = null;
@@ -94,10 +94,10 @@ function isMatchSingle (root, node, selector) {
 }
 
 function containsRule (node, rule) {
-	if (rule.type === Selector.Type.CLASS) {
+	if (rule.type === Type.CLASS) {
 		return hasClass(node, rule.str.substring(1));
 	}
-	if (rule.type === Selector.Type.TAG) {
+	if (rule.type === Type.TAG) {
 		return node.tagName === rule.str;
 	}
 	throw new Error('Unsupported element`s css rule ' + rule.str);

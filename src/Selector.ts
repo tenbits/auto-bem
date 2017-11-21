@@ -1,55 +1,60 @@
-const Utils = require('./parse_helpers');
+import * as Utils from './parse_helpers';
 
-const Selector = module.exports = function Selector (parent) {
-	this.parent = parent;
-	this.child = null;
-	this.rules = [];
-	this.nestCount = 0;
-	this.nextOperator = '';
-	this.isHost = false;
-	
-	this.top = parent || this;
-	this.top.last = this;
+
+export enum Type {
+	TAG = 1,
+	CLASS = 2,
+	ID = 3,
+	UNIVERSAL = 4,
+	ATTR = 5,
+	PSEUDO = 6,
 };
 
-const Type = {
-	TAG: 1,
-	CLASS: 2,
-	ID: 3,
-	UNIVERSAL: 4,
-	ATTR:5,
-	PSEUDO:6,
-};
-
-Selector.parse = parse;
-Selector.fromArray = fromArray;
-Selector.Type = Type;
-Selector.prototype = {
+export class Selector {
+	parent: Selector
+	child: Selector = null;
+	rules: SelectorRule[] = []
+	nestCount = 0
+	nextOperator = ''
+	isHost = false
+	top: Selector
+	last: Selector	
+	constructor (parent?: Selector) {
+		this.parent = parent;
+		this.child = null;
+		this.rules = [];
+		this.nestCount = 0;
+		this.nextOperator = '';
+		this.isHost = false;
+		
+		this.top = parent || this;
+		this.top.last = this;
+	}
 	add (type, str) {
 		this.rules.push(new SelectorRule(type, str));
-	},
+	}
 	next (nextOperator) {
 		this.child = new Selector(this);
 		this.nextOperator = nextOperator;			
-		var x = this;
+		let x:Selector = this;
 		while(x != null) {
 			x.nestCount++;
 			x = x.parent;
 		}
 		return this.child;
-	},
+	}
 	toArray () {
-		var arr = [this];
-		var x = this.child;
+		let arr: Selector[] = [this];
+		let x = this.child;
 		while(x != null) {
 			arr.push(x);
 			x = x.child;
 		}
 		return arr;
-	},
+	}
 	toString () {
 		var sel = '',
-			x = this;
+			x:Selector = this;
 		while(x != null) {
 			sel += this.stringifyRules(x.rules);
 			if (x.child == null) {
@@ -64,20 +69,26 @@ Selector.prototype = {
 				: ':host(' + sel + ')';
 		}
 		return sel;
-	},
+	}
 	stringifyRules (rules) {
 		var str = '', i = -1, imax = rules.length;
 		while(++i < imax) str += rules[i].str;
 		return str;
 	}
-};
 
-function SelectorRule (type, str) {
-	this.type = type;
-	this.str = str;
+	static parse = parse;
+	static fromArray = fromArray;
+	static Type = Type
 }
 
-function parse (str) {
+
+export class SelectorRule {
+	constructor (public type: Type, public str:string) {
+		
+	}
+}
+
+export function parse (str) {
 	var imax = str.length,
 		i = -1,
 		selector = new Selector(),
@@ -162,7 +173,7 @@ function parse (str) {
 	return top;
 }
 
-function fromArray (arr) {
+export function fromArray (arr) {
 	var first = arr[0];
 	first.top = first;
 	first.last = arr[arr.length - 1];

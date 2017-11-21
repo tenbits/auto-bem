@@ -1,4 +1,6 @@
-module.exports = function (style, matches) {
+import { Match } from "../selectorMatches";
+
+export function rewriteCss (style: string, matches: Match[]): string {
 	var i = matches.length;
 	var out = style;
 	while(--i > -1) {

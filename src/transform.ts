@@ -1,12 +1,12 @@
-const {
+import {
 	transformStyle,
 	transformTemplate,
-} = require('./transform/exports');
+} from './transform/exports';
 
-const selectorMatches = require('./selectorMatches');
-const selectorFlatten = require('./selectorFlatten');
+import { selectorMatches } from './selectorMatches'
+import { selectorFlatten } from './selectorFlatten'
 
-module.exports = function (template, style, options) {
+export function transform (template, style, options) {
 
 	let matches = selectorMatches(style);
 	selectorFlatten(matches, options);
