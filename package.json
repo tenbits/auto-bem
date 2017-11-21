@@ -17,7 +17,7 @@
   "types": "./lib/index.d.ts",
   "devDependencies": {
     "@types/node": "^8.0.53",
-    "app-bundler": "0.0.37",
+    "app-bundler": "0.0.38",
     "atma": ">0.9.26",
     "atma-loader-ts": "^1.0.0",
     "dts-bundle": "^0.7.3"
