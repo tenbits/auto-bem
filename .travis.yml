@@ -1,5 +1,5 @@
 before_script:
-  - npm run build
+  - npm run build-lib
 
 script:
   - "npm test"

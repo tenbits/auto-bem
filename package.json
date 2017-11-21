@@ -24,9 +24,10 @@
   },
   "scripts": {
     "test": "atma test",
-    "build": "app-bundler && npm run build-types",
+    "build": "npm run build-lib && npm run build-types",
     "watch": "app-bundler --watch",
     "release": "atma release",
+    "build-lib": "app-bundler",
     "build-types": "tsc -p . & atma custom tools/build-dts"
   },
   "keywords": [],
