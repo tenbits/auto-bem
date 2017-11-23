@@ -1,9 +1,10 @@
+import { IOptions } from '../IOptions';
 import { rewriteCss } from './rewriteCss'
 import { rewriteMask } from './rewriteMask'
 import { Match } from '../selectorMatches'
 import { mask } from '../globals'
 
-export function transformTemplate (template, matches, options): string {
+export function transformTemplate (template, matches, options: IOptions): string {
 	var minify = options && options.minify || false;
 	var parserFn = options && options.templateType === 'mask'
 		? mask.parse
@@ -25,12 +26,12 @@ export function transformTemplate (template, matches, options): string {
 			}
 			reporter(error);
 		})
-	}
-	return mask.stringify(ast, { minify: minify });
+	}	
+	return mask.stringify(ast, { indent: minify ? 0 : 4 });
 };
 export function transformAst(ast, matches) {
 	rewriteMask(ast, matches);
 };
-export function transformStyle(style: string, matches: Match[], options: any): string {
+export function transformStyle(style: string, matches: Match[], options: IOptions): string {
 	return rewriteCss(style, matches);
 };

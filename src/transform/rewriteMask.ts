@@ -1,11 +1,13 @@
 import { mask } from '../globals';
 import { Selector, Type } from '../Selector';
+import { Match } from '../selectorMatches';
 
-export function rewriteMask (template, cssMatches) {
+export function rewriteMask (template: string, cssMatches: Match[]) {
+	
+
 	var mappings = getMappings(cssMatches),
 		imax = mappings.length,
 		root = null;
-
 	return mask.TreeWalker.walk(template, function (node) {
 		if (node.type === mask.Dom.TEXTNODE) {
 			return;
@@ -13,16 +15,18 @@ export function rewriteMask (template, cssMatches) {
 		if (root == null) {
 			root = node;
 		}
-
-		var i = -1;
-		while(++i < imax) if (isMatch(root, node, mappings[i].query.last)) {
-			mappings[i].match.found = true;
-			prependKlass(node, mappings[i].klass);
-		}			
+		
+		var i = -1;		
+		while(++i < imax) {
+			if (isMatch(root, node, mappings[i].query.last)) {
+				mappings[i].match.found = true;
+				prependKlass(node, mappings[i].klass);
+			}
+		}
 	});
 };
 
-function getMappings (cssMatches) {
+function getMappings (cssMatches) {	
 	var out = [], i = cssMatches.length;
 	while(--i > -1) {
 		let match = cssMatches[i],
@@ -56,9 +60,10 @@ function isMatch(root, node, selectorLast) {
 
 	var parent = node.parent,
 		selector = selectorLast.parent;
-
+	
+	/** traverse mask tree and selector parts */
 	for (;selector != null && parent != null && parent !== root.parent; parent = parent.parent) {
-		var match = isMatchSingle(root, parent, selector);
+		var match = isMatchSingle(root, parent, selector);		
 		if (match) {
 			selector = selector.parent;
 			continue;
@@ -70,15 +75,15 @@ function isMatch(root, node, selectorLast) {
 			continue;
 		}
 		return false;
-	}
+	}	
 	return selector == null;
 }
 function isMatchSingle (root, node, selector) {
 	if (selector.isHost && node !== root) {
 		return false;
 	}		
-	var imax = selector.rules.length;
-	if (imax === 0) {
+	var imax = selector.rules.length;	
+	if (imax === 0) {		
 		if (selector.isHost) {
 			return true;
 		}

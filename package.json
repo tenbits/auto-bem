@@ -1,7 +1,7 @@
 {
   "name": "auto-bem",
   "description": "Transforms selectors in html and css to be unique",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "author": "Alexander Kit <alex.kit@atmajs.com>",
   "repository": {
     "type": "git",
@@ -20,7 +20,8 @@
     "app-bundler": "0.0.38",
     "atma": ">0.9.26",
     "atma-loader-ts": "^1.0.0",
-    "dts-bundle": "^0.7.3"
+    "dts-bundle": "^0.7.3",
+    "uglify-es": "^3.1.10"
   },
   "scripts": {
     "test": "atma test",

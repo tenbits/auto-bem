@@ -1,3 +1,4 @@
+import { IOptions } from './IOptions';
 import {
 	transformStyle,
 	transformTemplate,
@@ -16,11 +17,10 @@ import { selectorFlatten } from './selectorFlatten'
 export class BemCss {
 	style: string
 	matches: Match[]
-	constructor (style: string, public options: any = {}) {
+	constructor (style: string, public options: IOptions = {}) {
 		
 		this.matches = selectorMatches(style);
-		selectorFlatten(this.matches, this.options);
-
+		selectorFlatten(this.matches, this.options);		
 		this.style = transformStyle(style, this.matches, this.options);
 	}
 	transformTemplate (template, options) {

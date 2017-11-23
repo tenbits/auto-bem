@@ -53,32 +53,53 @@ declare module 'auto-bem/selectorMatches' {
         str: string;
         i: number;
         selector: Selector;
+        mappings: MatchMapping[];
         constructor(selector: string, i: number);
+    }
+    export class MatchMapping {
+        query: Selector;
+        klass: string;
     }
 }
 
 declare module 'auto-bem/selectorFlatten' {
-    export function selectorFlatten(matches: any, opts: any): void;
+    import { IOptions } from 'auto-bem/IOptions';
+    export function selectorFlatten(matches: any, opts: IOptions): void;
 }
 
 declare module 'auto-bem/transform' {
-    export function transform(template: any, style: any, options: any): {
+    import { IOptions } from 'auto-bem/IOptions';
+    export function transform(template: any, style: any, options: IOptions): {
         template: string;
         css: string;
     };
 }
 
 declare module 'auto-bem/BemCss' {
+    import { IOptions } from 'auto-bem/IOptions';
     import { Match } from 'auto-bem/selectorMatches';
     export class BemCss {
-        options: any;
+        options: IOptions;
         style: string;
         matches: Match[];
-        constructor(style: string, options?: any);
+        constructor(style: string, options?: IOptions);
         transformTemplate(template: any, options: any): string;
         transformAst(ast: any): void;
         getStyle(): string;
-        getSalt(): any;
+        getSalt(): string;
+    }
+}
+
+declare module 'auto-bem/IOptions' {
+    export interface IOptions {
+        type?: 'host' | 'block' | 'auto';
+        scopeId?: string;
+        templateType?: 'mask' | 'html';
+        useSalt?: boolean;
+        salt?: string;
+        filename?: string;
+        minify?: boolean;
+        reporter?: (error: Error) => void;
     }
 }
 

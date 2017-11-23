@@ -88,10 +88,15 @@ export class Match {
 	str: string
 	i: number
 	selector: Selector
-
+	mappings: MatchMapping[]
 	constructor (selector: string, i: number) {
 		this.str = selector.trim();
 		this.i = i;
 		this.selector = Selector.parse(this.str);
 	}
+}
+
+export class MatchMapping {
+	query: Selector
+	klass: string
 }

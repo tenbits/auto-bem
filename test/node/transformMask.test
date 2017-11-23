@@ -1,4 +1,22 @@
 UTest({
+	'should transform single css and nested element' () {
+		var css = `
+			.foo { color: red }
+		`;
+		var mask = `			
+			div > span.foo;
+		`;
+
+		var { template, css: style } = AutoBem.transform(mask, css, { 
+			scopeId: 'MyID',
+			templateType: 'mask',
+			type: 'host',
+			minify: true
+		});
+			
+		has_(template, 'span.MyID__foo.foo');	
+		has_(template, 'div>')			
+	},
 	'should transform css and mask' () {
 		var css = `
 			.foo { color: red }

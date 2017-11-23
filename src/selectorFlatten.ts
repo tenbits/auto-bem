@@ -1,15 +1,17 @@
+import { IOptions } from './IOptions';
 import { Selector, Type } from './Selector';
+import { Match } from './selectorMatches';
 
 let type_BLOCK = 1,
 	type_HOST = 2;
 
-export function selectorFlatten(matches, opts) {
+export function selectorFlatten(matches, opts: IOptions) {
 	if (matches == null || matches.length === 0) {
 		return;
 	}
-	var flatten = null,
+	let flatten = null,
 		type = type_HOST,
-		block = getBlockByDescendant(matches);
+		block = opts && opts.type === 'host' ? null : getBlockByDescendant(matches);	
 	if (block != null) {
 		flatten = flattenDescendant;
 		type = type_BLOCK;
@@ -18,7 +20,7 @@ export function selectorFlatten(matches, opts) {
 		block = getBlockFromFilename(opts) || getBlockAny(matches);
 		flatten = flattenDescendant; //-flattenHost;
 	}
-	var identity = getBlockIdentity(block, opts),
+	let identity = getBlockIdentity(block, opts),
 		imax = matches.length,
 		i = -1;
 	while (++i < imax) {
@@ -26,7 +28,7 @@ export function selectorFlatten(matches, opts) {
 	}
 };
 
-function getBlockIdentity(block, opts) {
+function getBlockIdentity(block, opts: IOptions): string {
 	if (opts == null) {
 		return block + '_' + genSalt();
 	}
@@ -44,7 +46,7 @@ function getBlockIdentity(block, opts) {
 	return block + '_' + salt;
 }
 
-function getBlockByDescendant(matches) {
+function getBlockByDescendant(matches: Match[]) {
 	var selector = matches[0].selector;
 	if (selector.rules.length === 0) {
 		return null;
@@ -58,7 +60,7 @@ function getBlockByDescendant(matches) {
 	}
 	return first;
 }
-function getBlockFromFilename(opts) {
+function getBlockFromFilename(opts: IOptions) {
 	var filename = opts && opts.filename;
 	if (filename == null) return null;
 	var name = /([^\/\\\.]+)\.(\w+)$/.exec(filename);
@@ -83,7 +85,7 @@ function genSalt() {
 
 var flattenDescendant;
 (function () {
-	flattenDescendant = function (match, klass, identity, scopeType) {
+	flattenDescendant = function (match: Match, klass: string, identity: string, scopeType: number) {
 		var selector = match.selector,
 			rules = selector.rules;
 
@@ -100,7 +102,7 @@ var flattenDescendant;
 
 	var replaceElIdentities;
 	(function () {
-		replaceElIdentities = function (match, scopeIdentity, scopeType) {
+		replaceElIdentities = function (match: Match, scopeIdentity, scopeType) {
 			var mappings = match.mappings = [],
 				selector = match.selector;
 
